@@ -1,0 +1,4 @@
+##Comandos y links utiles
+xxd -s byte_offset -l octets_to_show ../pulsos.iq  Mostrar un bin en formato exa desde la posicion byte_offset. Se muestran 													la cantidad de octetos pasados en el parametro octets_to_show
+
+http://www.scadacore.com/field-tools/programming-calculators/online-hex-converter/ Convertidor hexa a binario,float,uint,etc
