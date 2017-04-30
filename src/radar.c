@@ -19,7 +19,12 @@ int main(){
 	float H_imaginario[GATES][cantidad_pulsos];
 	float V_real[GATES][cantidad_pulsos];
 	float V_imaginario[GATES][cantidad_pulsos];
-	// printf("Cantidad de pulsos: %i\n",cantidad_pulsos );
+	
+	calcular_promedio(ptr,GATES,cantidad_pulsos,V_real,0);
+	calcular_promedio(ptr,GATES,cantidad_pulsos,V_imaginario,1);
+	calcular_promedio(ptr,GATES,cantidad_pulsos,H_real,2);
+	calcular_promedio(ptr,GATES,cantidad_pulsos,H_imaginario,3);
+	//printf("%f\n",H_real[2][2]);
 	// fread(&x,sizeof(uint16_t),1,ptr);
 	// float H_real[x][x];
 	// printf("Cantidad de datos: %i\n",x );
