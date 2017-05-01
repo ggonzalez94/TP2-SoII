@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
 
 int get_cantidad_pulsos(FILE *ptr){
 	int cantidad_pulsos = 0;
@@ -55,7 +56,13 @@ void calcular_promedio_pulso(FILE *ptr,int filas,int columnas,float matriz_a_lle
 *
 */
 
-void calcular_promedio(FILE *ptr,int filas,int columnas,float matriz_a_llenar[filas][columnas],int offset){
+void calcular_promedio(char *path,int filas,int columnas,float matriz_a_llenar[filas][columnas],int offset){
+	FILE *ptr;
+	ptr = fopen(path,"rb");
+	if (ptr == NULL){
+		perror("File: ");
+		exit(1);
+	}
 	uint16_t cantidad_muestras;
 	int muestras_por_gate;
 	long int bytes_a_saltar;
@@ -75,6 +82,50 @@ void calcular_promedio(FILE *ptr,int filas,int columnas,float matriz_a_llenar[fi
 		fsetpos(ptr,&posicion_inicial);
 		fseek(ptr,bytes_a_saltar,SEEK_CUR);
 	}
+	//Retorno el puntero de posicion al inicio del archivo
+	fclose(ptr);
+}
+/**
+* @brief Calcula el valor absoluto de un numero complejo
+*
+*/
+float valor_absoluto(float real,float imaginario){
+	float resultado;
+	resultado = sqrt(pow(real,2) + pow(imaginario,2));
+	return resultado;
+}
+
+/**
+* @brief Calcula la correlacion de cada gate y llena un vector de correlacion
+*
+*/
+void calcular_correlacion(int filas,int columnas, float matriz_real[filas][columnas],float matriz_imaginaria[filas][columnas],float vector_correlacion[filas]){
+	float correlacion;
+	for (int i = 0; i < filas; ++i)
+	{
+		for (int j = 0; j < columnas-1; ++j)
+		{
+			correlacion += valor_absoluto(matriz_real[i][j],matriz_imaginaria[i][j]) * valor_absoluto(matriz_real[i][j+1],matriz_imaginaria[i][j+1]);
+		}
+		correlacion = correlacion/columnas; //Divido entre la cantidad de pulsos
+		vector_correlacion[i] = correlacion;
+	}
+
+}
+/**
+* @brief Adjunta al final del archivo ptr la cantidad de datos(int) y un vector de correlacion
+*
+*/
+void escribir_correlacion(FILE *ptr,int longitud,float vector_correlacion[longitud]){
+	int cantidad_datos = longitud;
+	//Me voy al final del archivo para adjuntar los datos
+	fseek(ptr,0,SEEK_END);
+	//Escribo la cantidad de datos por cada vector de correlacion(que siempre es igual a la cantidad de gates)
+	fwrite(&cantidad_datos,sizeof(int),1,ptr);
+	//Escribo los datos de correlacion
+	fwrite(vector_correlacion,sizeof(float),longitud,ptr);
+	//Retorno el puntero al inicio del archivo
+	fseek(ptr,0,SEEK_SET);
 }
 
 

@@ -1,7 +1,7 @@
 
-
 CC=gcc
-CFLAGS=-I.
+CFLAGS= -fopenmp
+LIBS = -lm
 DEPS = radarHelpers.h
 OBJ = radar.o radarHelpers.o 
 
@@ -9,7 +9,7 @@ OBJ = radar.o radarHelpers.o
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 radar: $(OBJ)
-	gcc -o $@ $^ $(CFLAGS)
+	gcc -o $@ $^ $(LIBS) $(CFLAGS)
 
 clean:
 	rm -f *.o radar
