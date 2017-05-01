@@ -14,11 +14,11 @@ int main(){
 	int cantidad_pulsos;
 	uint16_t x;
 	float lectura;
-	// read_ptr = fopen("../pulsos.iq","rb");
-	// if (read_ptr == NULL){
-	// 	perror("File: ");
-	// 	exit(1);
-	// }
+	read_ptr = fopen(path_pulsos,"rb");
+	if (read_ptr == NULL){
+		perror("File: ");
+		exit(1);
+	}
 	cantidad_pulsos = get_cantidad_pulsos(read_ptr);
 	printf("Cantidad de pulsos: %i\n",cantidad_pulsos);
 
@@ -29,7 +29,7 @@ int main(){
 	float H_correlacion[GATES];
 	float V_correlacion[GATES];
 
-
+	
 	calcular_promedio(read_ptr,GATES,cantidad_pulsos,V_real,0);
 	calcular_promedio(read_ptr,GATES,cantidad_pulsos,V_imaginario,1);
 	calcular_promedio(read_ptr,GATES,cantidad_pulsos,H_real,2);
@@ -64,6 +64,6 @@ int main(){
 	// 	printf("Valor %i: %f\n",i,lectura );
 	// }
 
-	fclose(ptr);
+	fclose(read_ptr);
 	return 0;
 }
