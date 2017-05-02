@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <omp.h>
 
 #include "radarHelpers.h"
 
@@ -29,14 +30,41 @@ int main(){
 	float H_correlacion[GATES];
 	float V_correlacion[GATES];
 
-	
-	calcular_promedio(read_ptr,GATES,cantidad_pulsos,V_real,0);
-	calcular_promedio(read_ptr,GATES,cantidad_pulsos,V_imaginario,1);
-	calcular_promedio(read_ptr,GATES,cantidad_pulsos,H_real,2);
-	calcular_promedio(read_ptr,GATES,cantidad_pulsos,H_imaginario,3);
+	omp_set_num_threads(1);
+	#pragma omp parallel sections
+	{
+	    #pragma omp section
+	    { 
+	        calcular_promedio(path_pulsos,GATES,cantidad_pulsos,V_real,0);
+	    }
 
-	calcular_correlacion(GATES,cantidad_pulsos,H_real,H_imaginario,H_correlacion);
-	calcular_correlacion(GATES,cantidad_pulsos,V_real,V_imaginario,V_correlacion);
+	    #pragma omp section
+	    { 
+	        calcular_promedio(path_pulsos,GATES,cantidad_pulsos,V_imaginario,1);
+	    }
+	    #pragma omp section
+	    { 
+	        calcular_promedio(path_pulsos,GATES,cantidad_pulsos,H_real,2);
+	    }
+	    #pragma omp section
+	    { 
+	        calcular_promedio(path_pulsos,GATES,cantidad_pulsos,H_imaginario,3);
+	    }
+	}
+
+	omp_set_num_threads(1);
+	#pragma omp parallel sections
+	{
+
+		#pragma omp section
+		{
+			calcular_correlacion(GATES,cantidad_pulsos,H_real,H_imaginario,H_correlacion);
+		}
+		#pragma omp section
+		{
+			calcular_correlacion(GATES,cantidad_pulsos,V_real,V_imaginario,V_correlacion);
+		}
+	}
 
 	//Escribo los resultados en un binario
 	write_ptr = fopen("../correlacion.iq","w+b");
@@ -47,22 +75,6 @@ int main(){
 	escribir_correlacion(write_ptr,GATES,V_correlacion);
 	escribir_correlacion(write_ptr,GATES,H_correlacion);
 
-
-	//printf("%f\n",H_real[2][2]);
-	// fread(&x,sizeof(uint16_t),1,ptr);
-	// float H_real[x][x];
-	// printf("Cantidad de datos: %i\n",x );
-	// for (int i=0;i<100;i++){
-	// 	fread(&lectura,sizeof(float),1,ptr);
-	// 	printf("Valor %i: %f\n",i,lectura );
-	// }
-
-	// fread(&x,2,1,ptr);
-	// printf("Cantidad de datos: %i\n",x );
-	// for (int i=0;i<100;i++){
-	// 	fread(&lectura,sizeof(float),1,ptr);
-	// 	printf("Valor %i: %f\n",i,lectura );
-	// }
 
 	fclose(read_ptr);
 	return 0;

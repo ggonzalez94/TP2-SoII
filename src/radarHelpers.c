@@ -56,11 +56,16 @@ void calcular_promedio_pulso(FILE *ptr,int filas,int columnas,float matriz_a_lle
 *
 */
 
-void calcular_promedio(FILE *ptr,int filas,int columnas,float matriz_a_llenar[filas][columnas],int offset){
+void calcular_promedio(char *path,int filas,int columnas,float matriz_a_llenar[filas][columnas],int offset){
+	FILE *ptr;
 	uint16_t cantidad_muestras;
 	int muestras_por_gate;
 	long int bytes_a_saltar;
-	fseek(ptr,0,SEEK_SET);
+	ptr = fopen(path,"rb");
+	if (ptr == NULL){
+		perror("File: ");
+		exit(1);
+	}
 	//Lleno 1 pulso a la vez
 	for(int columna_actual=0;columna_actual<columnas;columna_actual++){
 		fpos_t posicion_inicial;
@@ -76,8 +81,7 @@ void calcular_promedio(FILE *ptr,int filas,int columnas,float matriz_a_llenar[fi
 		fsetpos(ptr,&posicion_inicial);
 		fseek(ptr,bytes_a_saltar,SEEK_CUR);
 	}
-	//Retorno el puntero de posicion al inicio del archivo
-	fseek(ptr,0,SEEK_SET);
+	fclose(ptr);
 }
 /**
 * @brief Calcula el valor absoluto de un numero complejo
