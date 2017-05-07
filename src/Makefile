@@ -1,6 +1,6 @@
 
 CC=gcc
-CFLAGS= -fopenmp -pg
+CFLAGS= -fopenmp -g -O0
 LIBS = -lm
 DEPS = radarHelpers.h
 OBJ = radar.o radarHelpers.o 

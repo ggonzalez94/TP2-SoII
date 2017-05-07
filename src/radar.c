@@ -1,13 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include <omp.h>
+#include <time.h>
 
 #include "radarHelpers.h"
 
 #define GATES 500 //cantidad de gates
 
 int main(){
+
+	clock_t start, end;
+ 	double cpu_time_used;
+ 	start = clock();
 
 	FILE *read_ptr;
 	FILE *write_ptr;
@@ -77,5 +83,10 @@ int main(){
 
 
 	fclose(read_ptr);
+	fclose(write_ptr);
+
+	end = clock();
+	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+	printf("%f\n",cpu_time_used );
 	return 0;
 }

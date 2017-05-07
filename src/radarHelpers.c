@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
+#include <omp.h>
 
 int get_cantidad_pulsos(FILE *ptr){
 	int cantidad_pulsos = 0;
@@ -98,7 +99,7 @@ float valor_absoluto(float real,float imaginario){
 *
 */
 void calcular_correlacion(int filas,int columnas, float matriz_real[filas][columnas],float matriz_imaginaria[filas][columnas],float vector_correlacion[filas]){
-	float correlacion;
+	float correlacion = 0;
 	for (int i = 0; i < filas; ++i)
 	{
 		for (int j = 0; j < columnas-1; ++j)
@@ -107,6 +108,7 @@ void calcular_correlacion(int filas,int columnas, float matriz_real[filas][colum
 		}
 		correlacion = correlacion/columnas; //Divido entre la cantidad de pulsos
 		vector_correlacion[i] = correlacion;
+		correlacion = 0;
 	}
 
 }

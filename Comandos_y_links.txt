@@ -3,3 +3,7 @@ xxd -s byte_offset -l octets_to_show ../pulsos.iq  Mostrar un bin en formato exa
 
 http://www.scadacore.com/field-tools/programming-calculators/online-hex-converter/ Convertidor hexa a binario,float,uint,etc
 http://www.openmp.org/wp-content/uploads/omp-hands-on-SC08.pdf  Tutorial openmp
+
+##Comentario sobre paralelismo
+Es mucho mas lento el programa cuando uso varios threads para leer del mismo archivo del disco porque tiene que hacer scheduling entre ellos y tarda mas
+http://stackoverflow.com/questions/13421767/multithread-read-from-disk
