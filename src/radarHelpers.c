@@ -1,3 +1,10 @@
+/** @file radarHelpers.c
+ *  @brief Funciones auxiliares necesarias para el funcionamiento del programa radar
+ *
+ * Incluye funciones para el calculo de los promedios,correlaciones y escritura en el
+ * archivo donde se deben guardar los resultados
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -5,6 +12,11 @@
 #include <math.h>
 #include <omp.h>
 
+/**
+* @brief Calcula la cantidad de pulsos en el archivo
+*
+* @param ptr Puntero al archivo
+*/
 int get_cantidad_pulsos(FILE *ptr){
 	int cantidad_pulsos = 0;
 	int tamano_archivo;
@@ -55,6 +67,12 @@ void calcular_promedio_pulso(FILE *ptr,int filas,int columnas,float matriz_a_lle
 /**
 * @brief Calcula el promedio de una matriz para todos los pulsos y gates
 *
+* @param path Path del archivo donde se encuentran los pulsos
+* @param filas Cantidad de filas de matriz_a_llenar
+* @param columnas Cantidad de columnas de matriz_a_llenar
+* @param matriz_a_llenar Matriz donde se guardan los promedios calculados(Ej:H_real)
+* @param offset Entero que especifica de que matriz se trata (V_real=0,V_imaginario=1,H_real=2,H_imaginario=3)
+*
 */
 
 void calcular_promedio(char *path,int filas,int columnas,float matriz_a_llenar[filas][columnas],int offset){
@@ -87,6 +105,8 @@ void calcular_promedio(char *path,int filas,int columnas,float matriz_a_llenar[f
 /**
 * @brief Calcula el valor absoluto de un numero complejo
 *
+* @param real Parte real
+* @param imaginario Parte imaginaria
 */
 float valor_absoluto(float real,float imaginario){
 	float resultado;
@@ -114,7 +134,9 @@ void calcular_correlacion(int filas,int columnas, float matriz_real[filas][colum
 }
 /**
 * @brief Adjunta al final del archivo ptr la cantidad de datos(int) y un vector de correlacion
-*
+* @param ptr Puntero al archivo donde se quiere escrbir los resultados
+* @param longitud Tamano del vector correlacion
+* @param vector_correlacion Vector con los valores calculados de la correlacion
 */
 void escribir_correlacion(FILE *ptr,int longitud,float vector_correlacion[longitud]){
 	int cantidad_datos = longitud;

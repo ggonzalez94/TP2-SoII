@@ -1,3 +1,10 @@
+/** @file radar.c
+ *  @brief Codigo principal del programa radar
+ *
+ * Desde aca se realiza el calculo de los promedios,correlacion y posterior escritura
+ * de los resultados en el archivo correlacion.iq
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
